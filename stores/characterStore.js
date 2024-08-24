@@ -23,6 +23,10 @@ export const useCharacterStore = defineStore('CharacterStore', {
 
             this.favCharactersList.push(payload);
         },
+        removeFromFavCharacterList(payload) {
+            this.favCharactersList = this.favCharactersList.filter(({ id }) => id !== payload.id,
+            );
+        },
     },
 
 })
