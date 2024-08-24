@@ -50,7 +50,7 @@ onMounted(async () => {
     isLoading.value = false
 })
 
-// todo dropdown menu (drugi parametr do szukajki) dla statusu postaci tak zeby se mozna bylo szukac po ich statusie, remove postaci, zrobic local storage, paginacja dla listy ulubionych, odświeżanie danych z local storage
+// todo dropdown menu (drugi parametr do szukajki) dla statusu postaci tak zeby se mozna bylo szukac po ich statusie, remove postaci z ulubionych, zrobic local storage, paginacja dla listy ulubionych, odświeżanie danych z local storage
 
 </script>
 
@@ -86,7 +86,13 @@ onMounted(async () => {
 <!--  Ulubione postacie-->
 
   <ul>
-    <li v-for="character in store.favCharactersList" :key="`character-id:${character.id}`">{{ character.name}}</li>
+    <li
+        v-for="character in store.favCharactersList"
+        :key="`character-id:${character.id}`"
+    >
+      {{ character.name}}
+      <button @click="store.removeFromFavCharacterList(character)">Remove From Favourites</button>
+    </li>
   </ul>
 
   <BasePagination v-if="store.paginationInfo.pages" :total-pages="store.paginationInfo.pages" :current-page="currentPage" @change-page-number="fetchAgain" />
