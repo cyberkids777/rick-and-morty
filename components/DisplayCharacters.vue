@@ -25,11 +25,11 @@ const fetchChars = async (pageNumber, characterName) => {
         store.addPagination(data.value.info)
     } catch (e) {
         isError.value = true
-        if (e.status === 400) console.log('błędne zapytanie')
-        if (e.status === 401) console.log('zaloguj sie żeby kontyn')
-        if (e.status === 403) console.log('brak dostępu')
-        if (e.status === 404) console.log('nie znaleziono strony')
-        if (e.status === 500) console.log('serwer error')
+        if (e.status === 400) console.log('Błędne zapytanie')
+        if (e.status === 401) console.log('Zaloguj się żeby kontynuować')
+        if (e.status === 403) console.log('Brak dostępu')
+        if (e.status === 404) console.log('Nie znaleziono strony')
+        if (e.status === 500) console.log('Serwer się wyjebał')
     } finally {
         isLoading.value = false
     }
