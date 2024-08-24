@@ -5,19 +5,20 @@ const currentPage = ref(1)
 const isLoading = ref(true)
 const isError = ref(false)
 const store = useCharacterStore()
-const inputData = defineModel('gay')
+const inputData = ref('')
+const selected = ref('name')
 
 //Pamietaj żeby fetch ZAWSZE był explicit async/await
 // Kazdy obiekt/tablica jest unikatowy bez wzgledu na to czy ma te same dane BO W JSie WSZYSTKO TO OBIEKT
 
-const fetchChars = async (pageNumber, characterName) => {
+const fetchChars = async (pageNumber, InputDataValue) => {
     isError.value = false //flagi, boolean, ktory swiadczy o stanie
     isLoading.value = true
     try {
         const { data } = await useFetch('https://rickandmortyapi.com/api/character/', {
             query: { // query: to ogólnie parametry przekazywane w zapytaniu do api
                 page: pageNumber, // Inaczej ?page=pageNumber
-                name: characterName,
+                [selected.value]: InputDataValue,
             },
         })
         if (!data.value) return // Zakoncz funkcje kiedy brak danych
@@ -50,7 +51,7 @@ onMounted(async () => {
     isLoading.value = false
 })
 
-// todo dropdown menu (drugi parametr do szukajki) dla statusu postaci tak zeby se mozna bylo szukac po ich statusie, remove postaci z ulubionych, zrobic local storage, paginacja dla listy ulubionych, odświeżanie danych z local storage
+// todo zrobic local storage, paginacja dla listy ulubionych, odświeżanie danych z local storage
 
 </script>
 
@@ -61,6 +62,9 @@ onMounted(async () => {
   <p>Current page: {{ currentPage }}</p>
   <div>
     <p> {{ inputData }}</p>
+
+<!--    Szukajka-->
+
     <label for="input">
       <input
           v-model="inputData"
@@ -68,6 +72,16 @@ onMounted(async () => {
           placeholder="Search here"
           @keyup.enter="searchCharacters"
       >
+    </label>
+
+<!--    Filtrowanie do szukajki-->
+
+    <label for="search-filter">
+      <select id="search-filter" v-model="selected" name="filter">
+        <option value="name">Name</option>
+        <option value="status">Alive, Dead or Unknown</option>
+        <option value="gender">Gender</option>
+      </select>
     </label>
   </div>
 
