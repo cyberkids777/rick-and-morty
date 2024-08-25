@@ -5,19 +5,20 @@ const currentPage = ref(1)
 const isLoading = ref(true)
 const isError = ref(false)
 const store = useCharacterStore()
-const inputData = defineModel('gay')
+const inputData = ref('')
+const selected = ref('name')
 
 //Pamietaj żeby fetch ZAWSZE był explicit async/await
 // Kazdy obiekt/tablica jest unikatowy bez wzgledu na to czy ma te same dane BO W JSie WSZYSTKO TO OBIEKT
 
-const fetchChars = async (pageNumber, characterName) => {
+const fetchChars = async (pageNumber, InputDataValue) => {
     isError.value = false //flagi, boolean, ktory swiadczy o stanie
     isLoading.value = true
     try {
         const { data } = await useFetch('https://rickandmortyapi.com/api/character/', {
             query: { // query: to ogólnie parametry przekazywane w zapytaniu do api
                 page: pageNumber, // Inaczej ?page=pageNumber
-                name: characterName,
+                [selected.value]: InputDataValue,
             },
         })
         if (!data.value) return // Zakoncz funkcje kiedy brak danych
@@ -40,17 +41,20 @@ const fetchAgain = async (pageNumber) => {
     currentPage.value = pageNumber
 }
 
-const searchCharacters = async () => {
+const searchCharacters = async (payload) => {
     currentPage.value = 1
+    inputData.value = payload
     await fetchChars(currentPage.value, inputData.value)
+}
+
+const setSearchFilter = (payload) => {
+    selected.value = payload
 }
 
 onMounted(async () => {
     await fetchChars(1)
     isLoading.value = false
 })
-
-// todo dropdown menu (drugi parametr do szukajki) dla statusu postaci tak zeby se mozna bylo szukac po ich statusie, remove postaci z ulubionych, zrobic local storage, paginacja dla listy ulubionych, odświeżanie danych z local storage
 
 </script>
 
@@ -59,19 +63,8 @@ onMounted(async () => {
   <div v-if="isLoading">loading</div>
   <div v-if="isError">nie udało się zaciągnać danych, spróbuj ponownie później</div>
   <p>Current page: {{ currentPage }}</p>
-  <div>
-    <p> {{ inputData }}</p>
-    <label for="input">
-      <input
-          v-model="inputData"
-          type="text"
-          placeholder="Search here"
-          @keyup.enter="searchCharacters"
-      >
-    </label>
-  </div>
 
-<!--  Pokaż wyniki-->
+  <BaseSearch @search-characters="searchCharacters" @set-search-filter="setSearchFilter"/>
 
   <ul v-if="store.characterList">
     <li
@@ -83,9 +76,7 @@ onMounted(async () => {
     </li>
   </ul>
 
-<!--  Ulubione postacie-->
-
-  <ul>
+  <ul v-if="store.favCharactersList">
     <li
         v-for="character in store.favCharactersList"
         :key="`character-id:${character.id}`"
