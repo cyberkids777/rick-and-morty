@@ -7,6 +7,7 @@ const store = useCharacterStore()
 
 onMounted(async () => {
     await store.fetchCharacters()
+    store.readFromStorage()
 })
 
 </script>
