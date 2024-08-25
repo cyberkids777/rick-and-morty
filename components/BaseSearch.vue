@@ -1,38 +1,43 @@
 <script setup lang="ts">
-const inputData = ref('')
-const selected = ref('name')
+const store = useCharacterStore()
+const { searchParam, activeFilter, currentPage } = toRefs(store)
+const searchInput = ref('')
 
-const emits = defineEmits([
-    'searchCharacters',
-    'setSearchFilter',
+const emit = defineEmits([
+    'on-search-submit',
 ])
 
-const searchCharacters = () => {
-    emits('searchCharacters', inputData.value)
+const onSubmit = async () => {
+    if (searchParam.value === searchInput.value) return;
+    searchParam.value = searchInput.value
+    emit('on-search-submit')
 }
 
-const setSearchFilter = () => {
-    emits('setSearchFilter', selected.value)
-}
+watch(activeFilter, () => {
+    currentPage.value = 1
+})
 
 </script>
 
 <template>
   <div>
-    <form action="" @submit.prevent>
+    <form method="GET" @submit.prevent="onSubmit">
       <label for="input">
         <input
-            v-model="inputData"
+            v-model="searchInput"
             type="text"
             placeholder="Search here"
-            @keyup.enter="searchCharacters"
         >
       </label>
 
       <label for="search-filter">
-        <select id="search-filter" v-model="selected" name="filter" @change="setSearchFilter">
-          <option value="name">Name</option>
-          <option value="status">Alive, Dead or Unknown</option>
+        <select
+            id="search-filter"
+            v-model="activeFilter"
+            name="filter"
+        >
+          <option value="name" selected>Name</option>
+          <option value="status" >Alive, Dead or Unknown</option>
           <option value="gender">Gender</option>
         </select>
       </label>

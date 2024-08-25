@@ -1,24 +1,21 @@
 <script setup>
+const emit = defineEmits([
+    'onPageChange',
+])
 const props = defineProps({
     totalPages: {
         type: Number,
         required: true,
     },
-    currentPage: {
-        type: Number,
-        required: true,
-    },
 })
-
-const emits = defineEmits([
-    'changePageNumber',
-])
+const store = useCharacterStore()
+const { currentPage } = toRefs(store)
 
 const limitPages = computed(() => {
 
     const numShown = ref(5)
     numShown.value = Math.min(numShown.value, props.totalPages)
-    const first = ref(props.currentPage - Math.floor(numShown.value / 2))
+    const first = ref(currentPage.value - Math.floor(numShown.value / 2))
     first.value = Math.max(first.value, 1)
     first.value = Math.min(first.value, props.totalPages - numShown.value + 1)
   
@@ -28,14 +25,24 @@ const limitPages = computed(() => {
 
 })
 
+const setPage = (pageNumber) => {
+    currentPage.value = pageNumber
+    emit('onPageChange')
+}
+
 </script>
 
 <template>
-  <button @click="emits('changePageNumber', 1)">First Page</button>
-  <button v-for="pageNumber in limitPages" :key="pageNumber" @click="emits('changePageNumber', pageNumber)"> {{ pageNumber }}</button>
-  <button @click="emits('changePageNumber', totalPages)">Last Page</button>
+  <button @click="setPage(1)">
+    First Page
+  </button>
+  <button
+      v-for="pageNumber in limitPages" :key="pageNumber"
+      @click="setPage(pageNumber)"
+  >
+    {{ pageNumber }}
+  </button>
+  <button @click="setPage(totalPages)">
+    Last Page
+  </button>
 </template>
-
-<style scoped>
-
-</style>
