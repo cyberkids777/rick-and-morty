@@ -41,17 +41,20 @@ const fetchAgain = async (pageNumber) => {
     currentPage.value = pageNumber
 }
 
-const searchCharacters = async () => {
+const searchCharacters = async (payload) => {
     currentPage.value = 1
+    inputData.value = payload
     await fetchChars(currentPage.value, inputData.value)
+}
+
+const setSearchFilter = (payload) => {
+    selected.value = payload
 }
 
 onMounted(async () => {
     await fetchChars(1)
     isLoading.value = false
 })
-
-// todo zrobic local storage, paginacja dla listy ulubionych, odświeżanie danych z local storage
 
 </script>
 
@@ -60,32 +63,8 @@ onMounted(async () => {
   <div v-if="isLoading">loading</div>
   <div v-if="isError">nie udało się zaciągnać danych, spróbuj ponownie później</div>
   <p>Current page: {{ currentPage }}</p>
-  <div>
-    <p> {{ inputData }}</p>
 
-<!--    Szukajka-->
-
-    <label for="input">
-      <input
-          v-model="inputData"
-          type="text"
-          placeholder="Search here"
-          @keyup.enter="searchCharacters"
-      >
-    </label>
-
-<!--    Filtrowanie do szukajki-->
-
-    <label for="search-filter">
-      <select id="search-filter" v-model="selected" name="filter">
-        <option value="name">Name</option>
-        <option value="status">Alive, Dead or Unknown</option>
-        <option value="gender">Gender</option>
-      </select>
-    </label>
-  </div>
-
-<!--  Pokaż wyniki-->
+  <BaseSearch @search-characters="searchCharacters" @set-search-filter="setSearchFilter"/>
 
   <ul v-if="store.characterList">
     <li
@@ -97,9 +76,7 @@ onMounted(async () => {
     </li>
   </ul>
 
-<!--  Ulubione postacie-->
-
-  <ul>
+  <ul v-if="store.favCharactersList">
     <li
         v-for="character in store.favCharactersList"
         :key="`character-id:${character.id}`"
