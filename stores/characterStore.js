@@ -24,8 +24,16 @@ export const useCharacterStore = defineStore('CharacterStore', {
             // Uzyj .fing zeby przyrownac idki
             if (this.favCharactersList.find(({ id }) => id === payload.id))
                 return
-            this.favCharactersList.push(payload);
+            this.favCharactersList.push(payload)
+            localStorage.setItem('favCharacterList', JSON.stringify(this.favCharactersList))
         },
+        readFromStorage() {
+            const localStorageData = JSON.parse(localStorage.getItem('favCharacterList'))
+
+            if (!localStorageData) return
+            this.favCharactersList = localStorageData
+        },
+
         async fetchCharacters() {
             this.isError = false //flagi, boolean, ktory swiadczy o stanie
             this.isLoading = true
@@ -52,7 +60,8 @@ export const useCharacterStore = defineStore('CharacterStore', {
 
         },
         removeFromFavCharacterList(payload) {
-            this.favCharactersList = this.favCharactersList.filter(({ id }) => id !== payload.id);
+            this.favCharactersList = this.favCharactersList.filter(({ id }) => id !== payload.id)
+            localStorage.setItem('favCharacterList', JSON.stringify(this.favCharactersList))
         },
     },
 
