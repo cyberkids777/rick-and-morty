@@ -2,6 +2,10 @@
 import { useCharacterStore } from '~/stores/characterStore.js';
 const store = useCharacterStore()
 
+const isCharacterInFavourites = (characterId) => {
+    return store.favCharactersList.find(({ id }) => id === characterId)
+}
+
 //Pamietaj żeby fetch ZAWSZE był explicit async/await
 // Kazdy obiekt/tablica jest unikatowy bez wzgledu na to czy ma te same dane BO W JSie WSZYSTKO TO OBIEKT
 
@@ -24,7 +28,10 @@ onMounted(async () => {
         :key="`character-id:${character.id}`"
     >
       {{ character.name }}
-      <button  @click="store.addToFavCharacterList(character)">
+      <button
+        :disabled="isCharacterInFavourites(character.id)"
+        @click="store.addToFavCharacterList(character)"
+      >
         Add to Favourites
       </button>
     </li>
