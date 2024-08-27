@@ -1,7 +1,6 @@
 <template>
   <div>
-    <h1>Hello World</h1>
-    <DisplayCharacters />
+    <NuxtPage />
   </div>
 </template>
 <script setup lang="ts">

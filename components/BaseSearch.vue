@@ -17,6 +17,10 @@ watch(activeFilter, () => {
     currentPage.value = 1
 })
 
+watch(searchInput, () => {
+    currentPage.value = 1
+})
+
 </script>
 
 <template>

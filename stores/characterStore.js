@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import { useFetch } from '#app';
 
 export const useCharacterStore = defineStore('CharacterStore', {
     state: () => ({
@@ -38,17 +37,17 @@ export const useCharacterStore = defineStore('CharacterStore', {
             this.isError = false //flagi, boolean, ktory swiadczy o stanie
             this.isLoading = true
             try {
-                const { data } = await useFetch('https://rickandmortyapi.com/api/character/', {
+                const response = await $fetch('https://rickandmortyapi.com/api/character/', {
                     query: { // query: to ogólnie parametry przekazywane w zapytaniu do api
                         page: this.currentPage, // Inaczej ?page=pageNumber
                         [this.activeFilter]: this.searchParam,
                     },
                 })
-                if (!data.value) return // Zakoncz funkcje kiedy brak danych
-                this.addCharacters(data.value.results)
-                this.addPagination(data.value.info)
+                if (!response) return // Zakoncz funkcje kiedy brak danych
+                this.addCharacters(response.results)
+                this.addPagination(response.info)
             } catch (e) {
-                isError.value = true
+                this.isError = true
                 if (e.status === 400) console.log('Błędne zapytanie')
                 if (e.status === 401) console.log('Zaloguj się żeby kontynuować')
                 if (e.status === 403) console.log('Brak dostępu')
