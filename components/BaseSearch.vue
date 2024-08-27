@@ -9,15 +9,12 @@ const emit = defineEmits([
 
 const onSubmit = async () => {
     if (searchParam.value === searchInput.value) return;
+    currentPage.value = 1
     searchParam.value = searchInput.value
     emit('on-search-submit')
 }
 
 watch(activeFilter, () => {
-    currentPage.value = 1
-})
-
-watch(searchInput, () => {
     currentPage.value = 1
 })
 
