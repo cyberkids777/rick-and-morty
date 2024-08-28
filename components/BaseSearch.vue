@@ -2,13 +2,15 @@
 const store = useCharacterStore()
 const { searchParam, activeFilter, currentPage } = toRefs(store)
 const searchInput = ref('')
+const router = useRouter()
 
 const emit = defineEmits([
     'on-search-submit',
 ])
 
-const onSubmit = async () => {
+const onSubmit = () => {
     if (searchParam.value === searchInput.value) return;
+    router.push('/')
     currentPage.value = 1
     searchParam.value = searchInput.value
     emit('on-search-submit')

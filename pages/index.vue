@@ -22,8 +22,6 @@ onMounted(async () => {
     <p>Current page: {{ store.currentPage }}</p>
     <NuxtLink to="/favourites">Favourite characters</NuxtLink>
 
-    <BaseSearch @on-search-submit="store.fetchCharacters" />
-
     <ul v-if="store.characterList">
       <li
           v-for="character in store.characterList"
