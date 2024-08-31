@@ -4,6 +4,7 @@ export const useCharacterStore = defineStore('CharacterStore', {
     state: () => ({
         activeFilter: 'name',
         currentPage: 1,
+        currentTab: 'All Characters',
         searchParam: '',
         characterList: [],
         paginationInfo: {
