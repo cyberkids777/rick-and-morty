@@ -5,7 +5,6 @@ const store = useCharacterStore()
 <template>
   <div>
     <h2>Favourite Characters Page</h2>
-    <NuxtLink to="/">Back</NuxtLink>
     <ul v-if="store.favCharactersList">
       <li
           v-for="character in store.favCharactersList"

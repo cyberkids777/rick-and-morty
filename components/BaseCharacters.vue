@@ -20,7 +20,6 @@ onMounted(async () => {
   <div>
     <h2>Rick and Morty Characters</h2>
     <p>Current page: {{ store.currentPage }}</p>
-    <NuxtLink to="/favourites">Favourite characters</NuxtLink>
 
     <ul v-if="store.characterList">
       <li
