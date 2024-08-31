@@ -17,7 +17,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div>
+  <div class="font-poppins font-500">
     <h2>Rick and Morty Characters</h2>
     <p>Current page: {{ store.currentPage }}</p>
 
