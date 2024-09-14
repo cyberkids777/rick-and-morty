@@ -7,12 +7,14 @@ export const useCharacterStore = defineStore('CharacterStore', {
         currentTab: 'All Characters',
         searchParam: '',
         characterList: [],
-        paginationInfo: {
-        },
+        paginationInfo: {},
         favCharactersList: [],
         isLoading: true,
         isError: false,
     }),
+    getters: {
+
+    },
     actions: {
         addCharacters(payload) {
             this.characterList = payload;
@@ -62,6 +64,9 @@ export const useCharacterStore = defineStore('CharacterStore', {
         removeFromFavCharacterList(payload) {
             this.favCharactersList = this.favCharactersList.filter(({ id }) => id !== payload.id)
             localStorage.setItem('favCharacterList', JSON.stringify(this.favCharactersList))
+        },
+        isCharacterFavourite(payload) {
+            return this.favCharactersList.find(({ id }) => id === payload)
         },
     },
 
